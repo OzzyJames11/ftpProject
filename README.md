@@ -49,7 +49,7 @@ sudo apt install -y vsftpd
 ```
 
 2. **Copiar / editar la configuración**
-Reemplaza /etc/vsftpd.conf por la siguiente configuración utilizada en el proyecto:
+Reemplaza `/etc/vsftpd.conf` por la siguiente configuración utilizada en el proyecto:
 
 ```conf
 # vsftpd minimal config for testing in WSL2
@@ -100,12 +100,13 @@ setproctitle_enable=YES
 
 # activacion de PORT
 port_enable=YES
-port_promiscuous=YES ```
+port_promiscuous=YES 
+```
 
-Nota: durante el desarrollo comenté connect_from_port_20=YES porque en WSL/vsftpd en modo activo (PORT) a veces produce vsf_sysutil_bind. Si ves errores 500 OOPS: vsf_sysutil_bind, comentar esa línea suele resolverlo.
+**Nota:** durante el desarrollo comenté `connect_from_port_20=YES` porque en WSL/vsftpd en modo activo (PORT) a veces produce vsf_sysutil_bind. Si ves errores `500 OOPS: vsf_sysutil_bind`, comentar esa línea suele resolverlo.
 
 3. **Crear un usuario de prueba (ejemplo)**
-```
+```conf
 sudo adduser ftpuser
 # iniciar el servidor vsftpd
 sudo service vsftpd start
@@ -118,22 +119,27 @@ Si se va a conectar desde Windows (FileZilla, cmd, etc.) hacia WSL, la IP de WSL
 
 Es necesario:
 - Ejecutar como administrador PowerShell.
-- Ejecutar el comando ```Set-ExecutionPolicy Bypass -Scope Process -Force``` si no permite scripts.
-- Ejecuta el script ```.\actualizar_portproxy_ftp.ps1```
+- Ejecutar el comando `Set-ExecutionPolicy Bypass -Scope Process -Force` si no permite scripts.
+- Ejecuta el script `.\actualizar_portproxy_ftp.ps1`
 
 
 ## Uso del Cliente
 1. **Compilar el cliente**
 En WSL se ubica en el directorio de trabajo, ejecutar el Makefile de la siguiente manera
-```make clean 
-make ```
+```bash
+make clean 
+make 
+```
 
 2. **Ejecutar el cliente**
 Hay que apuntar al servidor local.
-```./TCPftp localhost 21```
+```bash
+./TCPftp localhost 21
+```
 
 **Ejemplo de sesión**
-```USER: ftpuser
+```bash
+USER: ftpuser
 PASS: tupassword
 
 ftp> help
@@ -148,4 +154,5 @@ ftp> pwd
 ftp> dele antiguo.txt
 ftp> rest 100
 ftp> get archivoGrande.bin    # reanuda desde byte 100 (si el servidor lo permite en binario)
-ftp> quit```
+ftp> quit
+```
