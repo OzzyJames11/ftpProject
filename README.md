@@ -6,6 +6,7 @@ Este repositorio contiene la implementación de un **cliente FTP concurrente** e
 ---
 
 ## Estructura del repositorio
+```text
 ├── Makefile
 ├── TCPftp.c
 ├── connectsock.c
@@ -19,7 +20,7 @@ Este repositorio contiene la implementación de un **cliente FTP concurrente** e
 │ ├── archivoPruebaftp1.c
 │ └── ...
 └── .gitignore
-
+```
 
 
 - `TCPftp.c`: cliente FTP (principal).
@@ -115,9 +116,9 @@ sudo ss -tulpn | grep :21
 tail -f /var/log/vsftpd.log
 ```
 
-Si se va a conectar desde Windows (FileZilla, cmd, etc.) hacia WSL, la IP de WSL cambia con frecuencia (normalmente después de cada reinicio del ordenador). El scripts scripts/actualizar_portproxy_ftp.ps1 automatizan la creación / eliminación de la regla de netsh que reenvía el puerto 21 en Windows hacia la IP de WSL.
+Si se va a conectar desde Windows (FileZilla, cmd, etc.) hacia WSL, la IP de WSL cambia con frecuencia (normalmente después de cada reinicio del ordenador). El scripts `scripts/actualizar_portproxy_ftp.ps1` automatizan la creación / eliminación de la regla de netsh que reenvía el puerto 21 en Windows hacia la IP de WSL.
 
-Es necesario:
+## Uso del Script
 - Ejecutar como administrador PowerShell.
 - Ejecutar el comando `Set-ExecutionPolicy Bypass -Scope Process -Force` si no permite scripts.
 - Ejecuta el script `.\actualizar_portproxy_ftp.ps1`
@@ -156,3 +157,54 @@ ftp> rest 100
 ftp> get archivoGrande.bin    # reanuda desde byte 100 (si el servidor lo permite en binario)
 ftp> quit
 ```
+
+## Comandos útiles para monitoreo y depuración
+En WSL (Linux):
+- Ver procesos vsftpd y cliente:
+```bash
+ps aux | grep vsftpd
+ps aux | grep TCPftp
+```
+
+- Ver sockets escuchando/conexiones:
+```bash
+sudo ss -tulpn
+sudo netstat -tulpn
+```
+- Ver logs de vsftpd:
+```bash
+sudo truncate -s 0 /var/log/vsftpd.log #para eliminar logs
+sudo tail -f /var/log/vsftpd.log
+sudo tail -n 200 /var/log/vsftpd.log
+```
+
+- Ver conexiones activas del cliente:
+```bash
+ss -tnp | grep :21
+```
+
+**En Windows, CMD**
+```bash
+netsh interface portproxy show all
+```
+
+## Solución de problemas comunes
+- "Conexión cerrada por el host remoto" al conectar desde Windows
+Asegúrate de haber ejecutado `.\actualizar_portproxy_ftp.ps1` como Administrador (si usas Windows -> WSL).
+
+Verifica que vsftpd está corriendo en WSL (sudo service vsftpd status) y que escucha en el puerto 21 (ss -tulpn | grep :21).
+
+- 500 OOPS: vsf_sysutil_bind al usar PORT
+
+Comentar `connect_from_port_20=YES` en `/etc/vsftpd.conf` suele resolverlo (esto evita que el servidor intente originar la conexión de datos desde el puerto 20, lo cual puede fallar en WSL).
+
+- 550 No support for resume of ASCII transfer. con REST
+
+Asegúrate de usar TYPE I (binario) antes de REST. El cliente ya lo hace automáticamente, pero el servidor aún puede rechazarlo si no soporta reanudar en modo ASCII.
+
+- Puerto 21 usado por otra aplicación
+
+Verifica con `sudo ss -tulpn | grep :21`, mata procesos conflictivos con `sudo pkill vsftpd` o revisa qué PID usa el puerto (sudo lsof -i :21).
+
+
+
