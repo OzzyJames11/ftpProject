@@ -46,11 +46,13 @@ Este repositorio contiene la implementación de un **cliente FTP concurrente** e
 ```bash
 sudo apt update
 sudo apt install -y vsftpd
+```
 
 2. **Copiar / editar la configuración**
 Reemplaza /etc/vsftpd.conf por la siguiente configuración utilizada en el proyecto:
 
-```# vsftpd minimal config for testing in WSL2
+```conf
+# vsftpd minimal config for testing in WSL2
 listen=YES
 listen_ipv6=NO
 
