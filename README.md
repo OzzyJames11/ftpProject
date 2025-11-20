@@ -28,8 +28,6 @@ Este repositorio contiene la implementación de un **cliente FTP concurrente** e
 - `Makefile`: compilar todo.
 - `scripts/`: scripts PowerShell para gestionar `netsh portproxy` (Windows ⇄ WSL).
 - `tests/`: archivos de prueba (opcional).
-- No subir binarios (`TCPftp`, `*.o`) ni contraseñas.
-
 ---
 
 ## Requisitos
@@ -107,7 +105,7 @@ port_promiscuous=YES
 **Nota:** durante el desarrollo comenté `connect_from_port_20=YES` porque en WSL/vsftpd en modo activo (PORT) a veces produce vsf_sysutil_bind. Si ves errores `500 OOPS: vsf_sysutil_bind`, comentar esa línea suele resolverlo.
 
 3. **Crear un usuario de prueba (ejemplo)**
-```conf
+```bash
 sudo adduser ftpuser
 # iniciar el servidor vsftpd
 sudo service vsftpd start
