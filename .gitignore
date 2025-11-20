@@ -1,0 +1,20 @@
+# Archivos compilados
+*.o
+*.exe
+*.out
+*.obj
+*.dll
+
+# Archivos temporales de editores
+*~
+*.swp
+*.swo
+*.vscode/
+.idea/
+
+# Archivos del sistema Windows
+Thumbs.db
+.DS_Store
+
+# Archivos grandes o de prueba que no quieras subir
+*.bin
