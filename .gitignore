@@ -1,20 +1,18 @@
-# Archivos compilados
+# Build artefacts
 *.o
+TCPftp
 *.exe
-*.out
-*.obj
-*.dll
-
-# Archivos temporales de editores
+core
 *~
-*.swp
-*.swo
-*.vscode/
+
+# Editor / OS
+.vscode/
 .idea/
-
-# Archivos del sistema Windows
-Thumbs.db
 .DS_Store
+Thumbs.db
 
-# Archivos grandes o de prueba que no quieras subir
-*.bin
+# Logs
+*.log
+
+# Mac/Windows temp
+*.swp
